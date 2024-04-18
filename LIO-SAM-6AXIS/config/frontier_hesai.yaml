@@ -2,7 +2,7 @@ lio_sam_6axis:
 
   # Topics
   pointCloudTopic: "/hesai/pandar"               # Point cloud data
-  imuTopic: "/alphasense/imu"
+  imuTopic: "/alphasense_driver_ros/imu"
 
   odomTopic: "odometry/imu"                   # IMU pre-preintegration odometry, same frequency as IMU
   gpsTopic: "gps_odom"                   # GPS odometry topic from navsat, see module_navsat.launch file
@@ -22,9 +22,9 @@ lio_sam_6axis:
 
   # Export settings
   savePCD: true                              # https://github.com/TixiaoShan/LIO-SAM/issues/3
-  savePCDDirectory: "/home/xchu/ramlab_ws/src/LIO-SAM-6AXIS/data/"        # in your home folder, starts and ends with "/". Warning: the code deletes "LOAM" folder then recreates it. See "mapOptimization" for implementation
+  savePCDDirectory: "/home/haedam/catkin_ws/src/LIO_SAM_6AXIS/data/"        # in your home folder, starts and ends with "/". Warning: the code deletes "LOAM" folder then recreates it. See "mapOptimization" for implementation
   scene_name: "exp04"
-
+  saveDirectory: "/home/haedam/catkin_ws/src/LIO_SAM_6AXIS/data/" 
   #   Sensor Settings
   sensor: hesai                            # lidar sensor type, 'velodyne' or 'ouster' or 'livox'
   N_SCAN: 32                                  # number of lidar channel (i.e., Velodyne/Ouster: 16, 32, 64, 128, Livox Horizon: 6)
@@ -36,38 +36,40 @@ lio_sam_6axis:
   # IMU Settings
   imuFrequence: 400
 #  imuAccNoise: 0.0001688956233495657
-  imuAccNoise: 0.1
+  imuAccNoise: 0.0017994738237087971
 #  imuGyrNoise: 0.0010679343003532472
-  imuGyrNoise: 0.01
+  imuGyrNoise: 0.0002569416913835616 
 #  imuAccBiasN: 9.782812831313576e-07
-  imuAccBiasN: 0.001
+  imuAccBiasN: 0.00026925044238852936
   #  sometimes we can get the 3 axis calibration result of acc or gyro
   #  imuAccBias_N: [ 0.06080652138668933, 0.08353074835853214, 0.057072968234636895 ]
-  imuAccBias_N: [ 0.001,  0.001,  0.001 ]
+  imuAccBias_N: [ 0.00026925044238852936,  0.00026925044238852936,  0.00026925044238852936 ]
 #  imuGyrBiasN: 2.6541629581345176e-05
-  imuGyrBiasN: 0.001
-  imuGyrBias_N: [ 0.001,  0.001,  0.001 ]
+  imuGyrBiasN: 1.574215512643918e-05
+  imuGyrBias_N: [ 1.574215512643918e-05,  1.574215512643918e-05,  1.574215512643918e-05 ]
   #  imuGyrBias_N: [ -0.0015351229643790084, -0.0013449146576507546, 0.00030127855524786183 ]
   imuGravity: 9.81
-  imuGravity_N: [ 0.01165152782783894, 9.804989173462031, -0.008749296634685332 ]
+  imuGravity_N: [ 0, -9.804989173462031, 0 ]
   imuRPYWeight: 0.01
 
   #  # Extrinsics (lidar -> IMU)
-  # extrinsicTrans: [ -0.006730146149038548, -0.006897049862999071,0.049898628062256645 ]
-  # extrinsicRot: [ 0.006609639848469365, -0.9999773650294649, 0.0012578115132016717,
-  #                 -0.9999762249571927, -0.006612093869054189, -0.0019569708811106104,
-  #                 0.001965243352927244, -0.0012448467359610184, -0.9999972940839232 ]
-  # extrinsicRPY: [ 0.006609639848469365, -0.9999773650294649, 0.0012578115132016717,
-  #                 -0.9999762249571927, -0.006612093869054189, -0.0019569708811106104,
-  #                 0.001965243352927244, -0.0012448467359610184, -0.9999972940839232 ]4
-  extrinsicTrans: [0.001, 0.00855, -0.055]
-  extrinsicRot: [1, 0, 0,
-                  0, 1, 0,
-                  0, 0, -1]
-  extrinsicRPY: [1, 0, 0,
-                 0, 1, 0,
-                 0, 0, -1]
+  # Fastlio 
+  # extrinsicTrans: [-0.00459163, -0.002003, -0.0547992]
+  # extrinsicRot: [-0.0106465, -0.999911, 0.00806769,
+  #               0.999941, -0.010629, 0.00171369,
+  #               -0.00166849, 0.00808546, 0.99996] 
+  # extrinsicRPY: [-0.0106465, -0.999911, 0.00806769,
+  #               0.999941, -0.010629, 0.00171369,
+  #               -0.00166849, 0.00808546, 0.99996] 
 
+  # Vilens frontier looging 
+  extrinsicTrans: [-0.01661674,  0.01529554, -0.07735917]
+  extrinsicRot: [ 0.99998242,  0.00304873, -0.00508602,
+                 -0.00309734,  0.99994934, -0.0095776, 
+                0.00505656,  0.00959318,  0.9999412 ]
+  extrinsicRPY: [ 0.99998242,  0.00304873, -0.00508602,
+                 -0.00309734,  0.99994934, -0.0095776,
+                  0.00505656,  0.00959318,  0.9999412 ]
   # LOAM feature threshold
   edgeThreshold: 1.0
   surfThreshold: 0.1
@@ -85,7 +87,7 @@ lio_sam_6axis:
 
   # CPU Params
   numberOfCores: 20                              # number of cores for mapping optimization
-  mappingProcessInterval: 0.15                  # seconds, regulate mapping frequency
+  mappingProcessInterval: 0.15             # seconds, regulate mapping frequency
 
   # Surrounding map
   surroundingkeyframeAddingDistThreshold: 0.2   # meters, regulate keyframe adding threshold
@@ -94,7 +96,7 @@ lio_sam_6axis:
   surroundingKeyframeSearchRadius: 5.0         # meters, within n meters scan-to-map optimization (when loop closure disabled)
 
   # Loop closure
-  loopClosureEnableFlag: false
+  loopClosureEnableFlag: true
   loopClosureFrequency: 1.0                     # Hz, regulate loop closure constraint add frequency
   surroundingKeyframeSize: 30                   # submap size (when loop closure enabled)
   historyKeyframeSearchRadius: 30.0             # meters, key frame that is within n meters from current pose will be considerd for loop closure
